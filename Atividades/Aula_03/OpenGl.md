@@ -23,6 +23,7 @@ O objetivo deste exercício é permitir que o usuário aproxime e afaste o triâ
 "Z" para aproximar (trazendo o triângulo para frente no eixo Z).
 "X" para afastar (empurrando o triângulo para trás no eixo Z).
 
+# Explicação ao deixar o maouse em cima das imagens
 
 # Resposta 1:
 ![Resposta 1](./Imagens/num1.png "Mudar o valor do RGB para 255,255,255,1 de 0,0,1,1")
