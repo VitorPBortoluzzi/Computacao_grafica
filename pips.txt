@@ -1,0 +1,8 @@
+possiveis pips
+
+pip install pyrr 
+pip install pillow pywavefront 
+pip install PyOpenGL PyOpenGL_accelerate 
+pip install pygame 
+pip install numpy
+pip install pyglet
