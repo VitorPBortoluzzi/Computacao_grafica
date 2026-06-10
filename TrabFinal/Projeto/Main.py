@@ -35,7 +35,6 @@ num_vertices_cubo = 0
 textura_cubo = None
 
 
-
 # ==========================================================
 # CONFIGURAÇÕES DA JANELA
 # ==========================================================
@@ -370,7 +369,7 @@ def criar_cubo():
     textura_cubo = glGenTextures(1)
 
     load_texture(
-        "objetos/texture/gray_rocks_diff_4k.jpg",
+        "objetos/texture/Grass005_1K-JPG_Color.jpg",
         textura_cubo
     )
 
@@ -445,40 +444,69 @@ def inicializa_shaders():
 
 
 def render_loop():
+
     
+    # casas
     escala_house = pyrr.matrix44.create_from_scale(
-    Vector3([1.0, 1.0, 1.0])
+        Vector3([1.0, 1.0, 1.0])
+    )
+
+    rotacao_house = pyrr.matrix44.create_from_y_rotation(
+        np.radians(25)
     )
 
     translacao_house = pyrr.matrix44.create_from_translation(
-        Vector3([0.0, 0.0, 0.0])
+        Vector3([-85.0, 0.0, -34.0])
+    )
+
+    model_house = pyrr.matrix44.multiply(
+        rotacao_house,
+        escala_house
     )
 
     model_house = pyrr.matrix44.multiply(
         translacao_house,
-        escala_house
+        model_house
+    )
+
+    rotacao_house2 = pyrr.matrix44.create_from_y_rotation(
+        np.radians(-75)
     )
 
     translacao_house2 = pyrr.matrix44.create_from_translation(
-        Vector3([20.0, 0.0, 0.0])
+        Vector3([25.0, 0.0, 45.0])
+    )
+
+    model_house2 = pyrr.matrix44.multiply(
+        rotacao_house2,
+        escala_house
     )
 
     model_house2 = pyrr.matrix44.multiply(
         translacao_house2,
-        escala_house
+        model_house2
+    )
+
+    rotacao_house3 = pyrr.matrix44.create_from_y_rotation(
+        np.radians(-35)
     )
 
     translacao_house3 = pyrr.matrix44.create_from_translation(
-        Vector3([-20.0, 0.0, 15.0])
+        Vector3([-25.0, 0.0, 70.0])
+    )
+
+    model_house3 = pyrr.matrix44.multiply(
+        rotacao_house3,
+        escala_house
     )
 
     model_house3 = pyrr.matrix44.multiply(
         translacao_house3,
-        escala_house
+        model_house3
     )
 
     escala_cubo = pyrr.matrix44.create_from_scale(
-    Vector3([200.0, 0.3, 200.0])
+    Vector3([500.0, 0.3, 500.0])
     )
 
     translacao_cubo = pyrr.matrix44.create_from_translation(
@@ -489,11 +517,15 @@ def render_loop():
         translacao_cubo,
         escala_cubo
     )
+
+    
     # ======================================================
     # CONTROLE TEMPO
     # ======================================================
 
     last_time = glfw.get_time()
+
+    ultimo_print = glfw.get_time()
 
     base_speed = 25.0
 
@@ -508,6 +540,17 @@ def render_loop():
         # ==================================================
 
         current_time = glfw.get_time()
+
+        if current_time - ultimo_print >= 5.0:
+
+            print(
+                "Camera:",
+                cam.camera_pos.x,
+                cam.camera_pos.y,
+                cam.camera_pos.z
+            )
+
+            ultimo_print = current_time
 
         delta = current_time - last_time
 
@@ -670,6 +713,125 @@ def render_loop():
             0,
             num_vertices_cubo
         )
+
+        arvores = [
+            (-30, 0, -20),
+            (-10, 0, 40),
+            (-7,0,-10),
+            (50, 0, 60),
+            (-45, 0, 15),
+            (-25, 0, -35),
+            (-15, 0, 5),
+            (-2, 0, 50),
+            (12, 0, 30),
+            (18, 0, -40),
+            (28, 0, 10),
+            (33, 0, 45),
+            (37, 0, -5),
+            (42, 0, -30),
+            (48, 0, 22),
+            (-38, 0, -50),
+            (60, 0, 5),
+            (-70, 0, 10),
+            (-55, 0, 35),
+            (-60, 0, -15),
+            
+            (-20, 0, 80),
+            (0, 0, 85),
+            (65, 0, 70),
+            
+            (-40, 0, -60),
+            (-15, 0, -55),
+            (10, 0, -65),
+            (45, 0, -50),
+            
+            (75, 0, 20),
+            (68, 0, -35),
+            (80, 0, 45),
+            
+            (-35, 0, 30),
+            (-22, 0, -5),
+            (15, 0, 5),
+            (30, 0, -30),
+            (35, 0, 25),
+            (40, 0, 50),
+            (52, 0, -5),
+            (-5, 0, -30)
+        ]
+
+        for x, y, z in arvores:
+
+            # =====================
+            # Tronco
+            # =====================
+
+            escala_tronco = pyrr.matrix44.create_from_scale(
+                Vector3([1.0, 6.0, 1.0])
+            )
+
+            translacao_tronco = pyrr.matrix44.create_from_translation(
+                Vector3([x, 0.5, z])
+            )
+
+            model_tronco = pyrr.matrix44.multiply(
+                translacao_tronco,
+                escala_tronco
+            )
+
+            glUniformMatrix4fv(
+                glGetUniformLocation(Shader_programm, "model"),
+                1,
+                GL_FALSE,
+                model_tronco
+            )
+
+            glBindVertexArray(vao_cubo)
+
+            glBindTexture(
+                GL_TEXTURE_2D,
+                textura_tronco
+            )
+
+            glDrawArrays(
+                GL_TRIANGLES,
+                0,
+                num_vertices_cubo
+            )
+
+            # =====================
+            # Copa
+            # =====================
+
+            escala_copa = pyrr.matrix44.create_from_scale(
+                Vector3([5.0, 10.0, 5.0])
+            )
+
+            translacao_copa = pyrr.matrix44.create_from_translation(
+                Vector3([x*0.2, 1, z*0.2])
+            )
+
+            model_copa = pyrr.matrix44.multiply(
+                translacao_copa,
+                escala_copa
+            )
+
+            glUniformMatrix4fv(
+                glGetUniformLocation(Shader_programm, "model"),
+                1,
+                GL_FALSE,
+                model_copa
+            )
+
+            glBindTexture(
+                GL_TEXTURE_2D,
+                textura_folhas
+            )
+
+            glDrawArrays(
+                GL_TRIANGLES,
+                0,
+                num_vertices_cubo
+            )
         # ==================================================
         # ATUALIZA
         # ==================================================
@@ -688,6 +850,9 @@ def main():
 
     global vao_cubo,num_vertices_cubo,textura_cubo 
 
+    global textura_tronco
+    global textura_folhas
+
     inicializa_opengl()
 
     vao_cubo,num_vertices_cubo,textura_cubo = criar_cubo()
@@ -696,6 +861,19 @@ def main():
     "objetos/house/farmhouse_obj.obj",
     "objetos/house/Farmhouse Texture.jpg"
     )
+
+    textura_tronco = glGenTextures(1)
+    load_texture(
+        "objetos/texture/tronco.jpg",
+        textura_tronco
+    )
+
+    textura_folhas = glGenTextures(1)
+    load_texture(
+        "objetos/texture/folhas.jpg",
+        textura_folhas
+    )
+
     inicializa_shaders()
 
     render_loop()
